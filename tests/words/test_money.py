@@ -5,8 +5,8 @@ import pytest
 from arapy import InvalidNumberError
 from arapy.digits import parse_number
 from arapy.words import Case, Currency, Gender, Noun, Tafqeet, to_words
-from arapy.words.currencies import KWD, SYP, USD
 
+from .currencies import KWD, SYP, USD
 from .golden_money import (
     DAYS,
     EMPLOYEES,

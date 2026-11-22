@@ -3,7 +3,7 @@ from types import MappingProxyType
 import pytest
 
 from arapy import ArapyError
-from arapy.words import Gender, Noun, PluralForm, currencies, noun_forms, plural_form
+from arapy.words import Currency, Gender, Noun, PluralForm, noun_forms, plural_form
 
 
 @pytest.mark.parametrize(
@@ -72,17 +72,22 @@ def test_forms_are_read_only() -> None:
     assert isinstance(noun.forms, MappingProxyType)
 
 
-def test_registry() -> None:
-    assert set(currencies.CURRENCIES) == {
-        "SYP", "USD", "EUR", "SAR", "AED", "EGP", "JOD", "LBP",
-        "TRY", "KWD", "IQD", "QAR", "BHD", "OMR", "GBP",
-    }  # fmt: skip
+def test_currency_create() -> None:
+    fils = Noun.create("فلس", "فلسان", "فلوس", gender=Gender.MASCULINE)
 
-    assert currencies.CURRENCIES["SYP"] is currencies.SYP
+    kwd = Currency.create(
+        code="KWD",
+        singular="دينار كويتي",
+        dual="ديناران كويتيان",
+        plural="دنانير كويتية",
+        gender=Gender.MASCULINE,
+        subunit=fils,
+        ratio=1000,
+        symbol="د.ك",
+    )
 
-    assert {c.code for c in currencies.CURRENCIES.values() if c.ratio == 1000} == {
-        "JOD", "KWD", "IQD", "BHD", "OMR",
-    }  # fmt: skip
+    assert (kwd.code, kwd.ratio, kwd.symbol, kwd.subunit) == ("KWD", 1000, "د.ك", fils)
 
-    with pytest.raises(TypeError):
-        currencies.CURRENCIES["XXX"] = currencies.SYP  # type: ignore[index]
+    assert kwd.form(PluralForm.MANY) == "دينارًا كويتيًا"
+
+    assert kwd.dual_oblique == "دينارين كويتيين"

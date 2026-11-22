@@ -7,5 +7,3 @@
 ::: arapy.words.grammar
 
 ::: arapy.words.money
-
-::: arapy.words.currencies

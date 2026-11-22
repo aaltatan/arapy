@@ -6,9 +6,9 @@ from hypothesis import strategies as st
 
 from arapy import ParseError
 from arapy.words import Case, Currency, Gender, Noun, Tafqeet, to_words
-from arapy.words.currencies import CURRENCIES, KWD, SYP, USD
 from arapy.words.grammar import MAX_INTEGER
 
+from .currencies import CURRENCIES, KWD, SYP, USD
 from .golden_integers import MASCULINE_NOMINATIVE
 from .golden_money import SYP_NOMINATIVE
 

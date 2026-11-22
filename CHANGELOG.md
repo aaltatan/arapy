@@ -11,8 +11,9 @@ First usable release.
 ### Added
 
 - `arapy.words`: amounts and counts in Arabic words (`to_words`, `Tafqeet`) with gender agreement,
-  CLDR plurals, case, construct forms, 15 built-in currencies with subunits, and parsing words
-  back to numbers; `Noun` and `Currency` for custom units; `format_money`.
+  CLDR plurals, case, construct forms, currencies with subunits, and parsing words back to
+  numbers; `Noun.create` and `Currency.create` to define your own units (no built-in currencies);
+  `format_money`.
 - `arapy.digits`: convert between Latin, Arabic-Indic and Persian digits; strict `parse_number`
   that rejects ambiguous separators; exact `format_number` and `format_percent`.
 - `arapy.normalize`: composable normalization rules, the `SEARCH`, `NAMES` and `SORT` presets,

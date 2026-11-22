@@ -121,6 +121,7 @@ class Noun:
 class Currency(Noun):
     """A currency: a noun with an ISO 4217 code and a subunit worth 1/`ratio` of it.
 
+    arapy ships no built-in currencies; define the ones you need once and pass them around.
     `symbol` («ل.س», «$») is used by `format_money`; when empty, the code is shown instead.
     """
 
@@ -128,3 +129,48 @@ class Currency(Noun):
     subunit: Noun
     ratio: int = 100
     symbol: str = ""
+
+    @classmethod
+    def create(  # type: ignore[override]
+        cls,
+        *,
+        code: str,
+        singular: str,
+        dual: str,
+        plural: str,
+        gender: Gender,
+        subunit: Noun,
+        ratio: int = 100,
+        symbol: str = "",
+        many: str | None = None,
+    ) -> "Currency":
+        """Define a currency from its three main forms.
+
+        ```python
+        from arapy import Currency, Gender, Noun
+        from arapy.words import PluralForm
+
+        qirsh = Noun.create("قرش", "قرشان", "قروش", gender=Gender.MASCULINE)
+
+        SYP = Currency.create(
+            code="SYP",
+            singular="ليرة سورية",
+            dual="ليرتان سوريتان",
+            plural="ليرات سورية",
+            gender=Gender.FEMININE,
+            subunit=qirsh,
+            symbol="ل.س",
+        )
+
+        print(SYP.form(PluralForm.MANY))  # ليرةً سوريةً
+        print(SYP.dual_oblique)  # ليرتين سوريتين
+        ```
+        """
+        return Currency(
+            forms=noun_forms(singular, dual, plural, many=many),
+            gender=gender,
+            code=code,
+            subunit=subunit,
+            ratio=ratio,
+            symbol=symbol,
+        )

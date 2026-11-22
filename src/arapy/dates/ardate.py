@@ -25,8 +25,13 @@ class ArDate(date):
     the subclass in the standard library, so the result stays an `ArDate`; `date - date` is still
     a `timedelta`. `strftime()` and `format()`-protocol output are standard.
 
-    >>> ArDate(2026, 1, 5).format("%O من %B %Y", digits="arabic")
-    'الخامس من كانون الثاني ٢٠٢٦'
+    ```python
+    from arapy import ArDate
+
+    d = ArDate(2026, 1, 5)
+
+    print(d.format("%O من %B %Y", digits="arabic"))  # الخامس من كانون الثاني ٢٠٢٦
+    ```
     """
 
     __slots__ = ()

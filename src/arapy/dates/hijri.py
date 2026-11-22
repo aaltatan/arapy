@@ -49,8 +49,14 @@ def _from_ordinal(n: int) -> tuple[int, int, int]:
 class HijriDate:
     """A Hijri date (Umm al-Qura, 1343–1500 AH). Compares and subtracts with `date` by day.
 
-    >>> HijriDate(1447, 9, 1).format("%O من %B %Y هـ", digits="arabic")
-    'الأول من رمضان ١٤٤٧ هـ'
+    ```python
+    from arapy import HijriDate
+
+    ramadan = HijriDate(1447, 9, 1)
+
+    print(ramadan.format("%O من %B %Y هـ", digits="arabic"))  # الأول من رمضان ١٤٤٧ هـ
+    print(ramadan.to_gregorian())  # 2026-02-18
+    ```
     """
 
     year: int

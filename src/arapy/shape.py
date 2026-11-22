@@ -10,8 +10,11 @@ from arapy._extras import require
 def shape(text: str) -> str:
     """Join the letters and put the text in visual (left-to-right) order, ready to draw.
 
-    >>> shape("سلام") == "\\ufee1\\ufefc\\ufeb3"  # ﻡ ﻼ ﺳ
-    True
+    ```python
+    from arapy import shape
+
+    print(ascii(shape("سلام")))  # '\\ufee1\\ufefc\\ufeb3'
+    ```
     """
     bidi = require("shape", "bidi")
 

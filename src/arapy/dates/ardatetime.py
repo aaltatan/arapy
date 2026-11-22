@@ -27,8 +27,13 @@ class ArDateTime(datetime):
     subclass, and `strftime()` and `format()`-protocol output are standard. `.format()` adds the
     time directives %H %I %M %S and %p (صباحًا / مساءً).
 
-    >>> ArDateTime(2026, 1, 5, 14, 30).format("%I:%M %p", digits="arabic")
-    '٠٢:٣٠ مساءً'
+    ```python
+    from arapy import ArDateTime
+
+    dt = ArDateTime(2026, 1, 5, 14, 30)
+
+    print(dt.format("%I:%M %p", digits="arabic"))  # ٠٢:٣٠ مساءً
+    ```
     """
 
     __slots__ = ()

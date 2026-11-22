@@ -46,7 +46,7 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 - [x] `nouns.py`: `Gender`, `PluralForm`, CLDR category function, `Noun` (+ builder helpers), `Currency`
 - [x] Noun agreement: 1 and 2 as adjectives after the noun, 3–10 reversed gender + plural, 11–99 تمييز, 100+ singular
-- [x] `currencies.py`: SYP, USD, EUR, SAR, AED, EGP, JOD, LBP, TRY, KWD, IQD, QAR, BHD, OMR, GBP (read-only mapping + module attributes)
+- [x] ~~`currencies.py` built-in registry~~ removed before 0.1.0: users define currencies with `Currency.create` (the 15 definitions live on as test fixtures in `tests/words/currencies.py`)
 - [x] Fractions → subunit words using `ratio`; error on too many decimal places
 - [x] `str` input through `parse_number`
 - [x] Golden table `tests/words/golden_money.py` (SYP feminine, USD masculine, KWD 1000 ratio) — reviewed and approved
@@ -90,7 +90,7 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 10 — Release 0.1.0
 
-- [x] Bilingual README (English + Arabic) with one example per module (run as doctests in `tests/test_docs.py`)
+- [x] Bilingual README (English + Arabic) with one example per module (run as checked scripts in `tests/test_docs.py`)
 - [x] Docs site (mkdocs-material) with an API reference (`mkdocs.yml`, `docs/`, deployed to GitHub Pages by `.github/workflows/docs.yml`)
 - [x] CHANGELOG, version bump to 0.1.0, top-level re-exports of the most-used names
 - [ ] Publish to PyPI with trusted publishing (maintainer: push, enable Pages, create the `v0.1.0` GitHub release)
@@ -139,7 +139,7 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 ## Decisions (Phase 5)
 
 - `Tafqeet.parse(text, unit=None)` takes the counted unit as an optional argument, so it can read unit and subunit words and use the currency's `ratio`. It strips only the `Tafqeet`'s own prefix and suffix.
-- `Currency` gains `symbol: str = ""`. The built-ins use Arabic abbreviations (ل.س، ر.س، د.ك، …) and $ € £ for USD, EUR and GBP. Custom currencies with no symbol show their code.
+- `Currency` gains `symbol: str = ""`. Currencies with no symbol show their code.
 - `format_money` defaults to Arabic digits with ٬ and ٫. With no `places`, whole amounts show no decimals and other amounts are padded to the subunit places (2, or 3 for 1000-ratio currencies).
 
 ## Decisions (Phase 6)
@@ -183,5 +183,6 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 - Integrations (CLI, Jinja2, Django, Excel, parse preprocessors) are independent packages and apps built in their own projects; Phase 11+ is removed from this plan.
 - `arapy` re-exports the most-used names: the dates types, `ar_since`/`ar_duration`, the digits functions, the errors, `NAMES`/`SEARCH`/`Normalizer`/`ar_equals`/`ar_key`, `ordinal`/`ordinal_adverb`, `shape`/`reshape_only`, `ar_sort_key`/`ar_sorted`, and `Case`/`Currency`/`Gender`/`Noun`/`Tafqeet`/`format_money`/`to_words`. Importing `arapy` loads no extras.
-- The README and docstring examples are doctests, run by the test suite.
+- The README and docstring examples are plain Python scripts in ```python blocks, not `>>>` doctests: each `print(...)  # expected` line must print exactly `expected` (a trailing `…` matches a prefix), and `tests/test_docs.py` runs them all. ```py blocks (Pillow, ReportLab) are illustrations and are not run.
 - Development status is now "3 - Alpha".
+- No built-in currencies. `arapy.words.currencies` is removed: users define every `Currency` themselves with `Currency.create(*, code, singular, dual, plural, gender, subunit, ratio=100, symbol="", many=None)` (keyword-only) and pass it in. The former 15 definitions are test fixtures in `tests/words/currencies.py`, so the golden tables are unchanged.

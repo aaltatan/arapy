@@ -1,9 +1,9 @@
-"""Built-in currencies. `CURRENCIES` is read-only; pass custom `Currency` values directly."""
+"""Currencies used by the tests, defined the way users define their own."""
 
 from collections.abc import Mapping
 from types import MappingProxyType
 
-from arapy.words.nouns import Currency, Gender, Noun, noun_forms
+from arapy.words import Currency, Gender, Noun
 
 _M = Gender.MASCULINE
 _F = Gender.FEMININE
@@ -35,13 +35,17 @@ def _currency(
     subunit_gender: Gender,
     ratio: int = 100,
 ) -> Currency:
-    return Currency(
-        forms=noun_forms(*names),
-        gender=gender,
+    singular, dual, plural = names
+
+    return Currency.create(
         code=code,
-        symbol=_SYMBOLS[code],
+        singular=singular,
+        dual=dual,
+        plural=plural,
+        gender=gender,
         subunit=Noun.create(*subunit, gender=subunit_gender),
         ratio=ratio,
+        symbol=_SYMBOLS[code],
     )
 
 

@@ -4,7 +4,8 @@ import pytest
 
 from arapy import InvalidNumberError
 from arapy.words import Currency, Gender, Noun, format_money, noun_forms
-from arapy.words.currencies import CURRENCIES, KWD, SYP, USD
+
+from .currencies import KWD, SYP, USD
 
 
 @pytest.mark.parametrize(
@@ -46,7 +47,3 @@ def test_falls_back_to_code() -> None:
     )
 
     assert format_money(7, custom) == "٧ XPT"
-
-
-def test_every_builtin_has_a_symbol() -> None:
-    assert all(c.symbol for c in CURRENCIES.values())

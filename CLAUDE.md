@@ -18,7 +18,7 @@ Main users: payment orders and reports (salariez, uniscope), document templates 
 
 1. **Strong typing first.** Run `mypy --strict` with no `Any` in public APIs. Ship `py.typed`. Use `Literal`, `StrEnum` and `Protocol` instead of loose strings and duck typing.
 2. **Simple design** (ArjanCodes style). Prefer small functions and frozen, slotted dataclasses, and choose composition over inheritance. Subclass `date`/`datetime` because interoperability requires it.
-3. **Immutable and stateless.** Avoid global mutable state. Config objects are frozen. The currency registry is a read-only mapping, and custom currencies are passed in as values rather than registered globally.
+3. **Immutable and stateless.** Avoid global mutable state. Config objects are frozen. There are no built-in currencies: users define each `Currency` (with `Currency.create`) and pass it in as a value; nothing is registered globally.
 4. **Zero dependencies in core.** Optional extras are imported lazily, and a missing extra raises `MissingExtraError` with the install command:
    - `arapy[hijri]` → `hijridate`
    - `arapy[shape]` → `arabic-reshaper`, `python-bidi`
@@ -51,10 +51,9 @@ src/arapy/
     match.py           # ar_equals, ar_key
   sort.py
   words/
-    __init__.py        # Tafqeet, to_words, Case, Noun, Currency, PluralForm, currencies
+    __init__.py        # Tafqeet, to_words, Case, Noun, Currency, PluralForm
     grammar.py         # integer → words engine (gender, case, hundreds spelling)
     nouns.py           # PluralForm, Gender, Noun, Currency
-    currencies.py      # built-in registry
     tafqeet.py         # Tafqeet config object + to_words shortcut
     parse.py           # words → number
     money.py           # format_money (digits + Currency)
@@ -152,7 +151,7 @@ to_words = Tafqeet()
 - **Fractions:** written in subunit words (… وخمسون قرشًا). The fraction must fit `ratio`. Too many decimal places raises an error, with no rounding.
 - **Negatives:** «سالب …».
 - **Range:** v1 supports up to 10^15 − 1 (trillions). Beyond that raises `OutOfRangeError`.
-- **Built-in currencies (v1):** SYP, USD, EUR, SAR, AED, EGP, JOD, LBP, TRY, KWD, IQD, QAR, BHD, OMR, GBP.
+- **Currencies:** none are built in. Users define them with `Currency.create(*, code, singular, dual, plural, gender, subunit, ratio=100, symbol="", many=None)` (keyword-only). Tests use the fixtures in `tests/words/currencies.py`.
 - **Without a unit:** a bare number. With a `Noun`: counted nouns (ثلاث ساعات، خمسة موظفين).
 - **Parse:** accepts both spellings (مئة/مائة), all cases, with or without prefix and suffix, and ignores tashkeel.
 

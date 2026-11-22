@@ -14,9 +14,26 @@ from arapy.words.parse import parse_words
 class Tafqeet:
     """Write numbers in Arabic words (تفقيط), optionally counting a noun or a currency.
 
-    >>> from arapy.words.currencies import SYP
-    >>> Tafqeet(prefix="فقط", suffix="لا غير")("1250.50", SYP)
-    'فقط ألف ومئتان وخمسون ليرةً سوريةً وخمسون قرشًا لا غير'
+    ```python
+    from arapy import Currency, Gender, Noun, Tafqeet, to_words
+
+    qirsh = Noun.create("قرش", "قرشان", "قروش", gender=Gender.MASCULINE)
+
+    SYP = Currency.create(
+        code="SYP",
+        singular="ليرة سورية",
+        dual="ليرتان سوريتان",
+        plural="ليرات سورية",
+        gender=Gender.FEMININE,
+        subunit=qirsh,
+    )
+
+    cheque = Tafqeet(prefix="فقط", suffix="لا غير")
+
+    print(to_words(125))  # مئة وخمسة وعشرون
+    print(cheque("1250.50", SYP))  # فقط ألف ومئتان وخمسون ليرةً سوريةً وخمسون قرشًا لا غير
+    print(to_words.parse("مائة وخمسة وعشرون"))  # 125
+    ```
     """
 
     hundreds: Hundreds = "مئة"
