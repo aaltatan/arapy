@@ -128,7 +128,6 @@ def format_number(
     places raises `InvalidNumberError`: numbers are never rounded.
     """
     number = _to_decimal(value)
-
     pattern = "," if grouping else ""
 
     if places is not None:
@@ -138,9 +137,7 @@ def format_number(
         pattern += f".{places}"
 
     text = format(number, pattern + "f")
-
     text = text.translate({ord(","): grouping or "", ord("."): decimal})
-
     return text.translate(_TABLES[digits])
 
 
@@ -159,7 +156,6 @@ def format_percent(
 
     # Shift the exponent rather than multiply, so the result is exact at any precision.
     percent = Decimal((sign, number_digits, exponent + 2))
-
     text = format_number(percent, digits=digits, grouping=grouping, decimal=decimal, places=places)
 
     return text + ARABIC_PERCENT

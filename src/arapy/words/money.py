@@ -31,5 +31,4 @@ def format_money(
         places = 0 if number == number.to_integral_value() else len(str(currency.ratio)) - 1
 
     text = format_number(number, digits=digits, grouping=grouping, decimal=decimal, places=places)
-
     return f"{text} {currency.symbol or currency.code}"

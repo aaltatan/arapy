@@ -103,9 +103,7 @@ def parse_words(
     clean = _normalize(text).removeprefix(_normalize(prefix)).removesuffix(_normalize(suffix))
 
     clean = clean.strip()
-
     negative = clean.startswith("سالب ")
-
     clean = clean.removeprefix("سالب ")
 
     if not clean:
@@ -117,7 +115,6 @@ def parse_words(
         clean = pattern.sub(rf"\1{marker}", clean)
 
     amounts = _Reader(text).read(clean.split())
-
     value = Decimal(amounts.main)
 
     if amounts.sub:
@@ -146,7 +143,6 @@ def _noun_markers(unit: Noun | None) -> list[tuple[re.Pattern[str], str]]:
     for noun, key in nouns:
         for category, form in noun.forms.items():
             kind = "2" if category is PluralForm.TWO else "1"
-
             forms[_normalize(form)] = f"<{key}{kind}>"
 
         if noun.dual_oblique:
@@ -248,7 +244,6 @@ class _Reader:
         else:
             # «ليرة سورية (واحدة)», «وقرش (واحد)», or «وليرة» after a hundred.
             self._add(key, 1)
-
             bare = True
 
         self.total = self.current = 0
@@ -259,6 +254,5 @@ class _Reader:
     def _add(self, key: str, value: int) -> None:
         if key == "S":
             self.amounts.sub += value
-
         else:
             self.amounts.main += value

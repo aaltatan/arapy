@@ -32,7 +32,6 @@ _ORDER = str.maketrans(
 def ar_sort_key(text: str, *, normalizer: Normalizer = SORT) -> tuple[str, str]:
     """Key for Arabic alphabetical order. Ties between folded letters (أ/ا) break by spelling."""
     clean = normalizer(text)
-
     return clean.translate(_ORDER), clean
 
 
@@ -55,15 +54,13 @@ def ar_sorted[T](
 def ar_sorted[T](
     items: Iterable[T],
     *,
-    key: Callable[[T], str] | None = None,
+    key: Callable[[T], str] = str,
     normalizer: Normalizer = SORT,
     reverse: bool = False,
 ) -> list[T]:
     """Sort in Arabic alphabetical order; `key` picks the text to sort by from each item."""
-    get_text: Callable[[T], str] = key or str
-
     return sorted(
         items,
-        key=lambda item: ar_sort_key(get_text(item), normalizer=normalizer),
+        key=lambda item: ar_sort_key(key(item), normalizer=normalizer),
         reverse=reverse,
     )

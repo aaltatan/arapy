@@ -32,9 +32,7 @@ class Tafqeet:
         """
         if isinstance(value, str):
             fils = isinstance(unit, Currency) and unit.ratio == 1000
-
             number = parse_number(value, decimal="." if fils else None)
-
         else:
             number = Decimal(value)
 
@@ -87,7 +85,6 @@ class Tafqeet:
 
         if sub:
             assert isinstance(unit, Currency)  # sub is only set for currencies
-
             parts.append(self._count(sub, unit.subunit))
 
         words = " و".join(parts)
@@ -105,7 +102,6 @@ class Tafqeet:
 
         if category is PluralForm.ONE:
             one = "واحدة" if noun.gender is Gender.FEMININE else "واحد"
-
             return f"{noun.form(category)} {one}"
 
         if category is PluralForm.TWO:
@@ -116,7 +112,6 @@ class Tafqeet:
         if rest in (1, 2):
             # Repeat the noun: 101 → «مئة ليرة وليرة», 102 → «مئة ليرة وليرتان».
             tail = noun.form(PluralForm.ONE if rest == 1 else PluralForm.TWO, oblique=oblique)
-
             return f"{self._count(n - rest, noun)} و{tail}"
 
         number = integer_to_words(

@@ -26,5 +26,4 @@ class Normalizer:
 
     def __add__(self, other: Rule) -> "Normalizer":
         extra = other.rules if isinstance(other, Normalizer) else (other,)
-
         return Normalizer((*self.rules, *extra))

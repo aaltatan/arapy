@@ -60,7 +60,6 @@ def integer_to_words(
         positive = integer_to_words(
             -n, gender=gender, case=case, hundreds=hundreds, construct=construct
         )
-
         return "سالب " + positive
 
     if n == 0:
@@ -75,12 +74,10 @@ def integer_to_words(
 
         if group:
             last = construct and n == 0
-
             parts.append(_scale_group(group, singular, plural, oblique, hundreds, construct=last))
 
     if n:
         feminine = gender is Gender.FEMININE
-
         parts.append(_below_1000(n, feminine, oblique, hundreds, construct=construct))
 
     return " و".join(parts)
@@ -111,7 +108,6 @@ def _below_100(n: int, feminine: bool, oblique: bool) -> str:
 
     if n == 12:
         stem = "اثنت" if feminine else "اثن"
-
         return stem + ("ي" if oblique else "ا") + (" عشرة" if feminine else " عشر")
 
     tens, unit = divmod(n, 10)
@@ -187,7 +183,6 @@ def _scale_group(
             return head
 
         tail = _scale_group(rest, singular, plural, oblique, spelling, construct=construct)
-
         return f"{head} و{tail}"
 
     if rest <= 10:
@@ -200,5 +195,4 @@ def _scale_group(
         noun = singular + _TANWEEN_FATH
 
     counted = f"{_below_100(rest, False, oblique)} {noun}"
-
     return f"{_hundreds(h, oblique, spelling)} و{counted}" if h else counted
