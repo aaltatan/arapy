@@ -44,13 +44,13 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 4 — words: nouns, currencies, fractions
 
-- [ ] `nouns.py`: `Gender`, `PluralForm`, CLDR category function, `Noun` (+ builder helpers), `Currency`
-- [ ] Noun agreement: 1 and 2 as adjectives after the noun, 3–10 reversed gender + plural, 11–99 تمييز, 100+ singular
-- [ ] `currencies.py`: SYP, USD, EUR, SAR, AED, EGP, JOD, LBP, TRY, KWD, IQD, QAR, BHD, OMR, GBP (read-only mapping + module attributes)
-- [ ] Fractions → subunit words using `ratio`; error on too many decimal places
-- [ ] `str` input through `parse_number`
-- [ ] Golden table `tests/words/golden_money.py` (SYP feminine, USD masculine, KWD 1000 ratio)
-- [ ] Counted-noun examples (ساعة، موظف، يوم)
+- [x] `nouns.py`: `Gender`, `PluralForm`, CLDR category function, `Noun` (+ builder helpers), `Currency`
+- [x] Noun agreement: 1 and 2 as adjectives after the noun, 3–10 reversed gender + plural, 11–99 تمييز, 100+ singular
+- [x] `currencies.py`: SYP, USD, EUR, SAR, AED, EGP, JOD, LBP, TRY, KWD, IQD, QAR, BHD, OMR, GBP (read-only mapping + module attributes)
+- [x] Fractions → subunit words using `ratio`; error on too many decimal places
+- [x] `str` input through `parse_number`
+- [x] Golden table `tests/words/golden_money.py` (SYP feminine, USD masculine, KWD 1000 ratio) — reviewed and approved
+- [x] Counted-noun examples (ساعة، موظف، يوم)
 
 ## Phase 5 — words: parse + format_money
 
@@ -104,9 +104,9 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Open questions (maintainer decides)
 
-1. **101 / 102 with a unit:** «مئة ليرة وليرة» / «مئة وليرتان» vs «مئة وواحدة ليرة» / «مئة واثنتان ليرة»?
-2. **Dual thousands before a noun:** «ألفا ليرة» (construct) vs «ألفان من الليرات» vs «ألفان ليرة»?
-3. **Plain 1 and 2 with a unit:** always «ليرة سورية واحدة» or just «ليرة سورية»?
+1. ~~**101 / 102 with a unit:** «مئة ليرة وليرة» / «مئة وليرتان» vs «مئة وواحدة ليرة» / «مئة واثنتان ليرة»?~~ **Decided:** «مئة ليرة وليرة» / «مئة ليرة وليرتان».
+2. ~~**Dual thousands before a noun:** «ألفا ليرة» (construct) vs «ألفان من الليرات» vs «ألفان ليرة»?~~ **Decided:** construct «ألفا ليرة».
+3. ~~**Plain 1 and 2 with a unit:** always «ليرة سورية واحدة» or just «ليرة سورية»?~~ **Decided:** «ليرة سورية واحدة», «ليرتان سوريتان».
 4. ~~**Tanween in output:** «قرشًا» / «دولارًا» always written, or only when `case` ≠ nominative?~~ **Decided:** always written (ًا).
 5. ~~**ة → ه folding** in the `SEARCH` preset only, or also in `NAMES`?~~ **Decided:** both presets.
 6. **Repo layout for arapy-cli:** same repo as a uv workspace, or a separate repo? (arapy itself stays a single package.)
@@ -128,3 +128,14 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 - Scale words are masculine, so their counts use masculine agreement («ثلاثة آلاف»); only the last group (below 1000) follows the requested gender.
 - `case` changes only the dual and sound-plural endings (اثنان/اثنين، اثنا/اثني، عشرون/عشرين، مئتان/مئتين، ألفان/ألفين). The تمييز after a number does not change.
 - A bare number (no unit) is masculine.
+
+## Decisions (Phase 4)
+
+- 101 / 102 with a unit repeat the noun: «مئة ليرة سورية وليرة سورية», «مئة ليرة سورية وليرتان سوريتان» (same for 1001, 1,000,002, …).
+- Before a noun, the last dual or hundred is in construct: «ألفا ليرة»، «مليونا ليرة»، «مئتا ليرة» (oblique «ألفي»، «مئتي»).
+- Before a noun, a scale word after 11–99 loses its tanween: «أحد عشر ألف ليرة», «مئة وخمسة وعشرون ألف ليرة».
+- Exactly 1 adds واحد/واحدة after the noun («ليرة سورية واحدة»); exactly 2 is the dual alone («ليرتان سوريتان»).
+- Tanween is written on every word of the تمييز after 11–99: «إحدى عشرة ليرةً سوريةً», «أحد عشر دولارًا أمريكيًا»; words ending in ا/و/ى (يورو) take none.
+- An amount below one main unit is written in the subunit only: 0.50 USD → «خمسون سنتًا».
+- 0 with a unit: «صفر ليرة سورية».
+- USD is «دولار أمريكي».

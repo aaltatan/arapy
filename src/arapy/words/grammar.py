@@ -45,16 +45,23 @@ def integer_to_words(
     gender: Gender = Gender.MASCULINE,
     case: Case = Case.NOMINATIVE,
     hundreds: Hundreds = "مئة",
+    construct: bool = False,
 ) -> str:
     """Write an integer in Arabic words: 125000 → «مئة وخمسة وعشرون ألفًا».
 
     `gender` sets agreement for the last group (below 1000); scale words are masculine.
+    `construct` writes the last word as it stands before a counted noun: «ألفا», «مئتا»,
+    and «ألف» instead of «ألفًا».
     """
     if abs(n) > MAX_INTEGER:
         raise OutOfRangeError(f"{n} is outside the supported range ±{MAX_INTEGER}")
 
     if n < 0:
-        return "سالب " + integer_to_words(-n, gender=gender, case=case, hundreds=hundreds)
+        positive = integer_to_words(
+            -n, gender=gender, case=case, hundreds=hundreds, construct=construct
+        )
+
+        return "سالب " + positive
 
     if n == 0:
         return "صفر"
@@ -67,15 +74,22 @@ def integer_to_words(
         group, n = divmod(n, value)
 
         if group:
-            parts.append(_scale_group(group, singular, plural, oblique, hundreds))
+            last = construct and n == 0
+
+            parts.append(_scale_group(group, singular, plural, oblique, hundreds, construct=last))
 
     if n:
-        parts.append(_below_1000(n, gender is Gender.FEMININE, oblique, hundreds))
+        feminine = gender is Gender.FEMININE
+
+        parts.append(_below_1000(n, feminine, oblique, hundreds, construct=construct))
 
     return " و".join(parts)
 
 
-def _dual(word: str, oblique: bool) -> str:
+def _dual(word: str, oblique: bool, *, construct: bool = False) -> str:
+    if construct:
+        return word + ("ي" if oblique else "ا")
+
     return word + ("ين" if oblique else "ان")
 
 
@@ -127,23 +141,20 @@ def _hundreds(h: int, oblique: bool, spelling: Hundreds, *, construct: bool = Fa
         return spelling
 
     if h == 2:
-        stem = spelling[:-1] + "ت"  # مئت / مائت
-
-        if construct:
-            return stem + ("ي" if oblique else "ا")
-
-        return _dual(stem, oblique)
+        return _dual(spelling[:-1] + "ت", oblique, construct=construct)  # مئت / مائت
 
     return _HUNDREDS_PREFIX[h] + spelling
 
 
-def _below_1000(n: int, feminine: bool, oblique: bool, spelling: Hundreds) -> str:
+def _below_1000(
+    n: int, feminine: bool, oblique: bool, spelling: Hundreds, *, construct: bool = False
+) -> str:
     h, rest = divmod(n, 100)
 
     parts = []
 
     if h:
-        parts.append(_hundreds(h, oblique, spelling))
+        parts.append(_hundreds(h, oblique, spelling, construct=construct and rest == 0))
 
     if rest:
         parts.append(_below_100(rest, feminine, oblique))
@@ -151,13 +162,21 @@ def _below_1000(n: int, feminine: bool, oblique: bool, spelling: Hundreds) -> st
     return " و".join(parts)
 
 
-def _scale_group(g: int, singular: str, plural: str, oblique: bool, spelling: Hundreds) -> str:
+def _scale_group(
+    g: int,
+    singular: str,
+    plural: str,
+    oblique: bool,
+    spelling: Hundreds,
+    *,
+    construct: bool = False,
+) -> str:
     """Words for `g` (1–999) of one scale: 3 → «ثلاثة آلاف», 101 → «مئة ألف وألف»."""
     if g == 1:
         return singular
 
     if g == 2:
-        return _dual(singular, oblique)
+        return _dual(singular, oblique, construct=construct)
 
     h, rest = divmod(g, 100)
 
@@ -167,9 +186,18 @@ def _scale_group(g: int, singular: str, plural: str, oblique: bool, spelling: Hu
         if rest == 0:
             return head
 
-        return f"{head} و{_scale_group(rest, singular, plural, oblique, spelling)}"
+        tail = _scale_group(rest, singular, plural, oblique, spelling, construct=construct)
 
-    noun = plural if rest <= 10 else singular + _TANWEEN_FATH
+        return f"{head} و{tail}"
+
+    if rest <= 10:
+        noun = plural
+
+    elif construct:
+        noun = singular
+
+    else:
+        noun = singular + _TANWEEN_FATH
 
     counted = f"{_below_100(rest, False, oblique)} {noun}"
 
