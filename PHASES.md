@@ -14,7 +14,7 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 - [x] `_letters.py`: letter constants and character classes (tashkeel, tatweel, alef forms, Arabic-Indic and Persian digits)
 - [x] `_extras.py`: `require(extra, module)` helper for lazy imports that raises `MissingExtraError`
 - [x] GitHub Actions CI: lint, type check, tests on 3.12 and 3.13, with and without extras
-- [ ] Reserve the name on PyPI (0.0.1 placeholder)
+- [x] Reserve the name on PyPI (0.0.1 placeholder)
 
 ## Phase 1 — digits
 
@@ -27,12 +27,12 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 2 — normalize + sort
 
-- [ ] `rules.py`: alef folding, yaa/alef maqsura, taa marbuta, hamza carriers, tashkeel, tatweel, Quranic marks, zero-width/bidi controls, Persian/Urdu lookalikes, compound names, space collapsing, digit folding
-- [ ] `Normalizer` (frozen, callable, composable: `Normalizer(rules) + rule`)
-- [ ] Presets `SEARCH`, `NAMES`
-- [ ] `ar_equals`, `ar_key`
-- [ ] `sort.py`: `ar_sort_key`, `ar_sorted`
-- [ ] Property test: every preset is idempotent
+- [x] `rules.py`: alef folding, yaa/alef maqsura, taa marbuta, hamza carriers, tashkeel, tatweel, Quranic marks, zero-width/bidi controls, Persian/Urdu lookalikes, compound names, space collapsing, digit folding
+- [x] `Normalizer` (frozen, callable, composable: `Normalizer(rules) + rule`)
+- [x] Presets `SEARCH`, `NAMES`
+- [x] `ar_equals`, `ar_key`
+- [x] `sort.py`: `ar_sort_key`, `ar_sorted`
+- [x] Property test: every preset is idempotent
 
 ## Phase 3 — words: integer engine
 
@@ -108,5 +108,12 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 2. **Dual thousands before a noun:** «ألفا ليرة» (construct) vs «ألفان من الليرات» vs «ألفان ليرة»?
 3. **Plain 1 and 2 with a unit:** always «ليرة سورية واحدة» or just «ليرة سورية»?
 4. **Tanween in output:** «قرشًا» / «دولارًا» always written, or only when `case` ≠ nominative?
-5. **ة → ه folding** in the `SEARCH` preset only, or also in `NAMES`?
+5. ~~**ة → ه folding** in the `SEARCH` preset only, or also in `NAMES`?~~ **Decided:** both presets.
 6. **Repo layout for arapy-cli:** same repo as a uv workspace, or a separate repo? (arapy itself stays a single package.)
+
+## Decisions (Phase 2)
+
+- ة → ه folding is in both `SEARCH` and `NAMES`.
+- ؤ → و and ئ → ي folding is in `SEARCH` only (the rule is still available to add to any normalizer).
+- Compound names are split with a space: عبدالله → عبد الله, ابوبكر → ابو بكر.
+- Sorting: ة sorts as ت; alef forms as ا; ؤ as و; ئ and ى as ي.
