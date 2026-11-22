@@ -12,7 +12,7 @@
 - **dates:** Pythonic `ArDate`, `ArDateTime` and `HijriDate` types, Arabic formatting and parsing, and relative durations.
 - **shape:** reshaping and bidi for drawing Arabic text in images, PDFs and ZPL.
 
-Main users: payment orders and reports (salariez, uniscope), document templates (templify), and stickers (qrbar). It is published on PyPI as `arapy`. A separate `arapy-cli` package comes later.
+Main users: payment orders and reports (salariez, uniscope), document templates (templify), and stickers (qrbar). It is published on PyPI as `arapy`. Integrations (a CLI, Jinja2, Django, Excel) are independent packages built in their own projects.
 
 ## Principles
 

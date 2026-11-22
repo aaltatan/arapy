@@ -1,6 +1,6 @@
 [project]
 name = "arapy"
-version = "0.0.1"
+version = "0.1.0"
 description = "Strongly typed Arabic text, number and date tools: tafqeet, digits, normalization, sorting, ordinals, dates and shaping."
 readme = "README.md"
 authors = [
@@ -10,9 +10,9 @@ license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = []
-keywords = ["arabic", "tafqeet", "hijri", "numbers", "normalization"]
+keywords = ["arabic", "tafqeet", "hijri", "numbers", "normalization", "dates", "digits", "reshaper"]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Topic :: Text Processing :: Linguistic",
@@ -28,6 +28,7 @@ Homepage = "https://github.com/aaltatan/arapy"
 Repository = "https://github.com/aaltatan/arapy"
 Issues = "https://github.com/aaltatan/arapy/issues"
 Changelog = "https://github.com/aaltatan/arapy/blob/main/CHANGELOG.md"
+Documentation = "https://aaltatan.github.io/arapy/"
 
 [project.optional-dependencies]
 hijri = ["hijridate"]
@@ -40,6 +41,10 @@ dev = [
     "pytest",
     "hypothesis",
     "pillow>=13.0.0",
+]
+docs = [
+    "mkdocs-material>=9.8.2",
+    "mkdocstrings[python]>=1.0.8",
 ]
 
 [build-system]

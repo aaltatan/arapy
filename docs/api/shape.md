@@ -1,0 +1,3 @@
+# Shape
+
+::: arapy.shape

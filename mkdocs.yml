@@ -1,0 +1,56 @@
+site_name: arapy
+site_description: Strongly typed Arabic text, number and date tools for Python.
+site_url: https://aaltatan.github.io/arapy/
+repo_url: https://github.com/aaltatan/arapy
+repo_name: aaltatan/arapy
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - navigation.sections
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      check_paths: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_root_heading: true
+            show_source: false
+            members_order: source
+            separate_signature: true
+            show_signature_annotations: true
+            filters: ["!^_"]
+
+nav:
+  - Home: index.md
+  - API reference:
+      - Words (تفقيط): api/words.md
+      - Digits: api/digits.md
+      - Normalize: api/normalize.md
+      - Sort: api/sort.md
+      - Ordinals: api/ordinals.md
+      - Dates: api/dates.md
+      - Shape: api/shape.md
+      - Errors: api/errors.md
+  - Changelog: changelog.md

@@ -90,17 +90,10 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 10 — Release 0.1.0
 
-- [ ] Bilingual README (English + Arabic) with one example per module
-- [ ] Docs site (mkdocs-material) with an API reference
-- [ ] CHANGELOG, version bump, publish to PyPI with trusted publishing
-
-## Phase 11+ — Integrations (separate phases, after 0.1.0)
-
-- [ ] **11 — Jinja2:** `arapy.jinja` filters (`tafqeet`, `ar_date`, `ar_digits`, `ordinal`) for templify, uniscope, qrbar
-- [ ] **12 — Parse preprocessors:** register normalize/digits rules with the argument-preprocessing package
-- [ ] **13 — Django:** `arapy.django` template filters, form fields and validators that accept Arabic digits
-- [ ] **14 — Excel:** xlwings UDFs (`=TAFQEET(A1, "SYP")`) and/or a CLI the VBA workbook can call
-- [ ] **15 — arapy-cli:** separate typer package (`arapy words 125000 --currency SYP`, `arapy date …`, `arapy normalize …`)
+- [x] Bilingual README (English + Arabic) with one example per module (run as doctests in `tests/test_docs.py`)
+- [x] Docs site (mkdocs-material) with an API reference (`mkdocs.yml`, `docs/`, deployed to GitHub Pages by `.github/workflows/docs.yml`)
+- [x] CHANGELOG, version bump to 0.1.0, top-level re-exports of the most-used names
+- [ ] Publish to PyPI with trusted publishing (maintainer: push, enable Pages, create the `v0.1.0` GitHub release)
 
 ---
 
@@ -111,7 +104,7 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 3. ~~**Plain 1 and 2 with a unit:** always «ليرة سورية واحدة» or just «ليرة سورية»?~~ **Decided:** «ليرة سورية واحدة», «ليرتان سوريتان».
 4. ~~**Tanween in output:** «قرشًا» / «دولارًا» always written, or only when `case` ≠ nominative?~~ **Decided:** always written (ًا).
 5. ~~**ة → ه folding** in the `SEARCH` preset only, or also in `NAMES`?~~ **Decided:** both presets.
-6. **Repo layout for arapy-cli:** same repo as a uv workspace, or a separate repo? (arapy itself stays a single package.)
+6. ~~**Repo layout for arapy-cli:** same repo as a uv workspace, or a separate repo?~~ **Decided:** integrations and the CLI are independent packages and apps, built in their own projects; arapy stays a single library.
 
 ## Decisions (Phase 2)
 
@@ -185,3 +178,10 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 - `shape` and `reshape_only` use `arabic-reshaper`'s default configuration, so tashkeel is removed and lam-alef ligatures are applied.
 - The `shape` extra requires `python-bidi>=0.5`, which provides the top-level `bidi.get_display`.
 - Pillow is a dev dependency, used only by the smoke test.
+
+## Decisions (Phase 10)
+
+- Integrations (CLI, Jinja2, Django, Excel, parse preprocessors) are independent packages and apps built in their own projects; Phase 11+ is removed from this plan.
+- `arapy` re-exports the most-used names: the dates types, `ar_since`/`ar_duration`, the digits functions, the errors, `NAMES`/`SEARCH`/`Normalizer`/`ar_equals`/`ar_key`, `ordinal`/`ordinal_adverb`, `shape`/`reshape_only`, `ar_sort_key`/`ar_sorted`, and `Case`/`Currency`/`Gender`/`Noun`/`Tafqeet`/`format_money`/`to_words`. Importing `arapy` loads no extras.
+- The README and docstring examples are doctests, run by the test suite.
+- Development status is now "3 - Alpha".
