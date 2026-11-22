@@ -85,8 +85,8 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 9 — shape
 
-- [ ] `shape(text)`, `reshape_only(text)` typed wrappers (lazy extras)
-- [ ] Pillow smoke test (optional dev dependency)
+- [x] `shape(text)`, `reshape_only(text)` typed wrappers (lazy extras)
+- [x] Pillow smoke test (optional dev dependency)
 
 ## Phase 10 — Release 0.1.0
 
@@ -179,3 +179,9 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 - `HijriDate` uses Umm al-Qura (1343–1500 AH, 1924-08-01 to 2077-11-15). An invalid or out-of-range date raises `OutOfRangeError`. It equals, orders, subtracts and hashes like the `date` of the same day; a `datetime` never compares equal. `to_gregorian()` returns an `ArDate`.
 - `HijriDate.format` supports %a %A %b %B %d %m %Y %j %O; %y is rejected because a two-digit Hijri year cannot be read back. `strptime` also accepts ربيع الثاني and جمادى الثانية; missing fields default to 1 محرم 1400.
 - `ArDateTime - datetime` is overloaded like `ArDate - date`, so it type-checks with a plain `datetime`.
+
+## Decisions (Phase 9)
+
+- `shape` and `reshape_only` use `arabic-reshaper`'s default configuration, so tashkeel is removed and lam-alef ligatures are applied.
+- The `shape` extra requires `python-bidi>=0.5`, which provides the top-level `bidi.get_display`.
+- Pillow is a dev dependency, used only by the smoke test.

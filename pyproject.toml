@@ -31,7 +31,7 @@ Changelog = "https://github.com/aaltatan/arapy/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 hijri = ["hijridate"]
-shape = ["arabic-reshaper", "python-bidi"]
+shape = ["arabic-reshaper", "python-bidi>=0.5"]
 
 [dependency-groups]
 dev = [
@@ -39,6 +39,7 @@ dev = [
     "mypy",
     "pytest",
     "hypothesis",
+    "pillow>=13.0.0",
 ]
 
 [build-system]
