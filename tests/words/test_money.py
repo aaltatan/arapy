@@ -84,5 +84,23 @@ def test_rejects_unrepresentable_fractions(value: Decimal, unit: Noun | None) ->
         to_words(value, unit)
 
 
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("1.500", "دينار كويتي واحد وخمسمئة فلس"),
+        ("١٫٥٠٠", "دينار كويتي واحد وخمسمئة فلس"),
+        ("1,500", "ألف وخمسمئة دينار كويتي"),
+        ("1,250.500", "ألف ومئتان وخمسون دينارًا كويتيًا وخمسمئة فلس"),
+    ],
+)
+def test_fils_currency_reads_dot_as_decimal(text: str, expected: str) -> None:
+    assert to_words(text, KWD) == expected
+
+
+def test_hundred_ratio_currency_stays_strict() -> None:
+    with pytest.raises(InvalidNumberError, match="Ambiguous"):
+        to_words("1.500", SYP)
+
+
 def test_trailing_zero_places_are_fine() -> None:
     assert to_words(Decimal("5.000"), SYP) == "خمس ليرات سورية"

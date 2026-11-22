@@ -55,7 +55,8 @@ def parse_number(text: str, *, decimal: DecimalMark | None = None) -> Decimal:
 
     `٬` is always a thousands separator and `٫` always a decimal mark. `,` `.` and `،` can be
     either, and when the text alone cannot tell (`"1,250"`), pass `decimal` to say which one
-    is the decimal mark; otherwise `InvalidNumberError` is raised.
+    is the decimal mark; otherwise `InvalidNumberError` is raised. A `٫` in the text is the
+    decimal mark even when `decimal` names another one.
     """
     s = to_latin_digits(text.strip()).replace(ARABIC_COMMA, ",")
 
@@ -67,7 +68,14 @@ def parse_number(text: str, *, decimal: DecimalMark | None = None) -> Decimal:
     elif s.startswith("+"):
         s = s[1:]
 
-    mark = _guess_decimal(s, text) if decimal is None else decimal.replace(ARABIC_COMMA, ",")
+    if ARABIC_DECIMAL_SEPARATOR in s:
+        mark: str | None = ARABIC_DECIMAL_SEPARATOR
+
+    elif decimal is not None:
+        mark = decimal.replace(ARABIC_COMMA, ",")
+
+    else:
+        mark = _guess_decimal(s, text)
 
     whole, sep, fraction = s.partition(mark) if mark else (s, "", "")
 
@@ -81,9 +89,6 @@ def parse_number(text: str, *, decimal: DecimalMark | None = None) -> Decimal:
 
 def _guess_decimal(s: str, text: str) -> str | None:
     """Return the decimal mark used in `s`, None if it has none, or raise if it is ambiguous."""
-    if ARABIC_DECIMAL_SEPARATOR in s:
-        return ARABIC_DECIMAL_SEPARATOR
-
     found = [c for c in ",." if c in s]
 
     if len(found) == 2:

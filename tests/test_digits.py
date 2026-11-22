@@ -81,6 +81,8 @@ def test_parse_number(text: str, expected: str) -> None:
         ("1,250", ",", "1.25"),
         ("12.500", ".", "12.5"),
         ("1،250", "،", "1.25"),
+        ("١٫٥", ".", "1.5"),
+        ("1.000٫5", ",", "1000.5"),
     ],
 )
 def test_parse_number_with_decimal_hint(text: str, decimal: DecimalMark, expected: str) -> None:

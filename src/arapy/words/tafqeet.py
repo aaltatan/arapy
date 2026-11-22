@@ -24,7 +24,18 @@ class Tafqeet:
     suffix: str = ""
 
     def __call__(self, value: int | Decimal | str, unit: Noun | None = None) -> str:
-        number = parse_number(value) if isinstance(value, str) else Decimal(value)
+        """Write `value`, counting `unit` if given.
+
+        For a currency with 1000 subunits (KWD, JOD, …) a string like "1.500" reads `.` as the
+        decimal mark, since three decimal places are normal there.
+        """
+        if isinstance(value, str):
+            fils = isinstance(unit, Currency) and unit.ratio == 1000
+
+            number = parse_number(value, decimal="." if fils else None)
+
+        else:
+            number = Decimal(value)
 
         if not number.is_finite():
             raise InvalidNumberError(f"Not a finite number: {value!r}")

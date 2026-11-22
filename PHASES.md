@@ -139,3 +139,4 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 - An amount below one main unit is written in the subunit only: 0.50 USD → «خمسون سنتًا».
 - 0 with a unit: «صفر ليرة سورية».
 - USD is «دولار أمريكي».
+- For a currency with 1000 subunits, a string amount reads `.` as the decimal mark: `to_words("1.500", KWD)` → «دينار كويتي واحد وخمسمئة فلس»; "1,500" is 1500. `٫` is always the decimal mark, even when `parse_number` gets a `decimal` hint.
