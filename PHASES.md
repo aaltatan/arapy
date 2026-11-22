@@ -77,10 +77,11 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 8 — dates: ArDateTime, HijriDate, humanize
 
-- [ ] `ArDateTime` with the same guarantees + `%p` → صباحًا/مساءً
-- [ ] `HijriDate` (frozen, slotted, lazy `hijridate`): date-like API, arithmetic, comparison with `date`, `to_gregorian()`, `.format()`, `strptime()`; `ArDate.to_hijri()`
-- [ ] `humanize.py`: `ar_since`, `ar_duration` using `words` + `Noun` (يوم، شهر، سنة، ساعة، دقيقة)
-- [ ] Tests skipped without `[hijri]`
+- [x] `ArDateTime` with the same guarantees + `%p` → صباحًا/مساءً
+- [x] `HijriDate` (frozen, slotted, lazy `hijridate`): date-like API, arithmetic, comparison with `date`, `to_gregorian()`, `.format()`, `strptime()`; `ArDate.to_hijri()`
+- [x] `humanize.py`: `ar_since`, `ar_duration` using `words` + `Noun` (يوم، شهر، سنة، ساعة، دقيقة)
+- [x] Tests skipped without `[hijri]`
+- [x] Golden tables (`tests/dates/golden_phase8.py`) — reviewed and approved
 
 ## Phase 9 — shape
 
@@ -168,3 +169,13 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 - Supported directives: %a %A %b %B %d %m %y %Y %j %O %%; any other raises `FormatError` (new error class). %y uses the `time.strptime` pivot (69–99 → 19xx).
 - `strptime` is strict: no whitespace trimming, exact month names (no hamza or tashkeel folding), a weekday or day of year that disagrees with the date raises `ParseError`; missing fields default to 1900-01-01 as in `datetime.strptime`.
 - Arithmetic, `replace` and the classmethods are not overridden: the standard library already returns the subclass. Only `__sub__` is overloaded, so `ArDate - date` type-checks as `timedelta`.
+
+## Decisions (Phase 8)
+
+- `ar_since` uses the largest whole unit, rounded down: years, months (calendar months), weeks (7+ days), days, hours, minutes, seconds. Exactly one is the bare noun («منذ يوم»); two is the oblique dual («منذ يومين»). «الآن» only when the gap is under one second; otherwise seconds are counted («منذ ثلاث ثوانٍ»). Future times use «بعد».
+- `ar_duration` lists every non-zero unit, largest first, joined with و, in the nominative: «سنة وثلاثة أشهر», «أسبوعان ويومان». A `timedelta` has no months or years, so its days become weeks and days. Zero is «صفر ثانية». Sub-second parts are ignored; negative parts raise `InvalidNumberError`.
+- Unit plurals: سنوات، أشهر، أسابيع، أيام، ساعات، دقائق، ثوانٍ.
+- `%p` is صباحًا before noon and مساءً from 12:00; `%I` shows 12 for midnight and noon. `%p` without `%I` is ignored when parsing, as in `strptime`.
+- `HijriDate` uses Umm al-Qura (1343–1500 AH, 1924-08-01 to 2077-11-15). An invalid or out-of-range date raises `OutOfRangeError`. It equals, orders, subtracts and hashes like the `date` of the same day; a `datetime` never compares equal. `to_gregorian()` returns an `ArDate`.
+- `HijriDate.format` supports %a %A %b %B %d %m %Y %j %O; %y is rejected because a two-digit Hijri year cannot be read back. `strptime` also accepts ربيع الثاني and جمادى الثانية; missing fields default to 1 محرم 1400.
+- `ArDateTime - datetime` is overloaded like `ArDate - date`, so it type-checks with a plain `datetime`.

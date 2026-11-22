@@ -1,12 +1,21 @@
 """`ArDate`: a `date` with Arabic formatting and parsing."""
 
 from datetime import date, datetime, timedelta
-from typing import NoReturn, Self, overload
+from typing import TYPE_CHECKING, NoReturn, Self, overload
 
-from arapy.dates.formatting import date_fields, format_fields, parse_date_fields
+from arapy.dates.formatting import (
+    DATE_DIRECTIVES,
+    check_date,
+    date_fields,
+    format_fields,
+    parse_fields,
+)
 from arapy.dates.months import MONTHS, WEEKDAYS, MonthNames, month_numbers
 from arapy.digits import DigitSet
 from arapy.errors import ParseError
+
+if TYPE_CHECKING:
+    from arapy.dates.hijri import HijriDate
 
 
 class ArDate(date):
@@ -79,26 +88,37 @@ class ArDate(date):
         1900-01-01, as in `datetime.strptime`. A weekday or day of year that does not match the
         date raises `ParseError`.
         """
-        fields = parse_date_fields(text, fmt, months=month_numbers(months))
+        d, _ = parse_gregorian(text, fmt, months=months, directives=DATE_DIRECTIVES)
 
-        year = fields.get("year", 1900)
+        return cls.from_date(d)
 
-        try:
-            if "yday" in fields and "month" not in fields and "day" not in fields:
-                result = cls.fromordinal(cls(year, 1, 1).toordinal() + fields["yday"] - 1)
+    def to_hijri(self) -> "HijriDate":
+        """The same day in the Hijri (Umm al-Qura) calendar. Needs `arapy[hijri]`."""
+        from arapy.dates.hijri import HijriDate
 
-            else:
-                result = cls(year, fields.get("month", 1), fields.get("day", 1))
+        return HijriDate.from_date(self)
 
-        except (ValueError, OverflowError) as err:
-            raise ParseError(f"{text!r} is not a valid date: {err}") from err
 
-        yday = result.timetuple().tm_yday
+def parse_gregorian(
+    text: str, fmt: str, *, months: MonthNames | None, directives: str
+) -> tuple[date, dict[str, int]]:
+    """Parse the date part of `text`; also return the parsed fields (for the time part)."""
+    fields = parse_fields(text, fmt, months=month_numbers(months), directives=directives)
 
-        if result.year != year or fields.get("yday", yday) != yday:
-            raise ParseError(f"{text!r}: the day of the year does not match the date")
+    year = fields.get("year", 1900)
 
-        if fields.get("weekday", result.weekday()) != result.weekday():
-            raise ParseError(f"{text!r}: the weekday does not match the date")
+    try:
+        if "yday" in fields and "month" not in fields and "day" not in fields:
+            result = date.fromordinal(date(year, 1, 1).toordinal() + fields["yday"] - 1)
 
-        return result
+        else:
+            result = date(year, fields.get("month", 1), fields.get("day", 1))
+
+    except (ValueError, OverflowError) as err:
+        raise ParseError(f"{text!r} is not a valid date: {err}") from err
+
+    check_date(
+        fields, text, year=result.year, yday=result.timetuple().tm_yday, weekday=result.weekday()
+    )
+
+    return result, fields
