@@ -8,6 +8,24 @@ from arapy.words.nouns import Currency, Gender, Noun, noun_forms
 _M = Gender.MASCULINE
 _F = Gender.FEMININE
 
+_SYMBOLS = {
+    "SYP": "ل.س",
+    "USD": "$",
+    "EUR": "€",
+    "SAR": "ر.س",
+    "AED": "د.إ",
+    "EGP": "ج.م",
+    "JOD": "د.أ",
+    "LBP": "ل.ل",
+    "TRY": "ل.ت",
+    "KWD": "د.ك",
+    "IQD": "د.ع",
+    "QAR": "ر.ق",
+    "BHD": "د.ب",
+    "OMR": "ر.ع",
+    "GBP": "£",
+}
+
 
 def _currency(
     code: str,
@@ -21,6 +39,7 @@ def _currency(
         forms=noun_forms(*names),
         gender=gender,
         code=code,
+        symbol=_SYMBOLS[code],
         subunit=Noun.create(*subunit, gender=subunit_gender),
         ratio=ratio,
     )

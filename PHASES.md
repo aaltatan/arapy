@@ -54,9 +54,9 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 5 — words: parse + format_money
 
-- [ ] `parse.py`: words → `Decimal` (both spellings, all cases, prefix/suffix, tashkeel tolerant, units and subunits)
-- [ ] Property test: `parse(to_words(n, unit)) == n` across ranges and currencies
-- [ ] `words/money.py`: `format_money(value, currency, ...)` → «١٢٬٥٠٠ ل.س»
+- [x] `parse.py`: words → `Decimal` (both spellings, all cases, prefix/suffix, tashkeel tolerant, units and subunits)
+- [x] Property test: `parse(to_words(n, unit)) == n` across ranges and currencies
+- [x] `words/money.py`: `format_money(value, currency, ...)` → «١٢٬٥٠٠ ل.س»
 
 ## Phase 6 — ordinals
 
@@ -140,3 +140,9 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 - 0 with a unit: «صفر ليرة سورية».
 - USD is «دولار أمريكي».
 - For a currency with 1000 subunits, a string amount reads `.` as the decimal mark: `to_words("1.500", KWD)` → «دينار كويتي واحد وخمسمئة فلس»; "1,500" is 1500. `٫` is always the decimal mark, even when `parse_number` gets a `decimal` hint.
+
+## Decisions (Phase 5)
+
+- `Tafqeet.parse(text, unit=None)` takes the counted unit as an optional argument, so it can read unit and subunit words and use the currency's `ratio`. It strips only the `Tafqeet`'s own prefix and suffix.
+- `Currency` gains `symbol: str = ""`. The built-ins use Arabic abbreviations (ل.س، ر.س، د.ك، …) and $ € £ for USD, EUR and GBP. Custom currencies with no symbol show their code.
+- `format_money` defaults to Arabic digits with ٬ and ٫. With no `places`, whole amounts show no decimals and other amounts are padded to the subunit places (2, or 3 for 1000-ratio currencies).

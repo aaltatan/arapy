@@ -2,6 +2,7 @@
 
 from arapy.words import currencies
 from arapy.words.grammar import Case, Hundreds
+from arapy.words.money import format_money
 from arapy.words.nouns import Currency, Gender, Noun, PluralForm, noun_forms, plural_form
 from arapy.words.tafqeet import Tafqeet, to_words
 
@@ -14,6 +15,7 @@ __all__ = [
     "PluralForm",
     "Tafqeet",
     "currencies",
+    "format_money",
     "noun_forms",
     "plural_form",
     "to_words",

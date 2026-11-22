@@ -7,6 +7,7 @@ from arapy.digits import parse_number
 from arapy.errors import InvalidNumberError
 from arapy.words.grammar import Case, Hundreds, integer_to_words
 from arapy.words.nouns import Currency, Gender, Noun, PluralForm, plural_form
+from arapy.words.parse import parse_words
 
 
 @dataclass(frozen=True, slots=True)
@@ -43,6 +44,15 @@ class Tafqeet:
         words = self._amount(number, unit, value)
 
         return " ".join(part for part in (self.prefix, words, self.suffix) if part)
+
+    def parse(self, text: str, unit: Noun | None = None) -> Decimal:
+        """Read words back into a number: `to_words.parse("مئة وخمسة وعشرون")` → 125.
+
+        Accepts مئة and مائة, every case, and text with or without this object's prefix and
+        suffix; tashkeel is ignored. Pass the `unit` that was counted so its words (and, for a
+        currency, its subunit words) can be read.
+        """
+        return parse_words(text, unit, prefix=self.prefix, suffix=self.suffix)
 
     def _amount(self, number: Decimal, unit: Noun | None, value: object) -> str:
         whole = int(abs(number))

@@ -119,8 +119,12 @@ class Noun:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Currency(Noun):
-    """A currency: a noun with an ISO 4217 code and a subunit worth 1/`ratio` of it."""
+    """A currency: a noun with an ISO 4217 code and a subunit worth 1/`ratio` of it.
+
+    `symbol` («ل.س», «$») is used by `format_money`; when empty, the code is shown instead.
+    """
 
     code: str
     subunit: Noun
     ratio: int = 100
+    symbol: str = ""
