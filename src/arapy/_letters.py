@@ -18,3 +18,8 @@ TASHKEEL: Final = frozenset(chr(c) for c in range(0x064B, 0x0653))
 LATIN_DIGITS: Final = "0123456789"
 ARABIC_DIGITS: Final = "٠١٢٣٤٥٦٧٨٩"
 PERSIAN_DIGITS: Final = "۰۱۲۳۴۵۶۷۸۹"
+
+ARABIC_DECIMAL_SEPARATOR: Final = "٫"  # ٫
+ARABIC_THOUSANDS_SEPARATOR: Final = "٬"  # ٬
+ARABIC_COMMA: Final = "،"  # ،
+ARABIC_PERCENT: Final = "٪"  # ٪

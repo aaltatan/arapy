@@ -18,11 +18,11 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 1 — digits
 
-- [ ] `to_latin_digits`, `to_arabic_digits`, `to_persian_digits`
-- [ ] `parse_number(text) -> Decimal` (Arabic ٬ ٫, Latin `,` `.`, Arabic comma ،, sign, ambiguity errors)
-- [ ] `format_number(...)` with digit set, grouping, decimal mark, places
-- [ ] `format_percent(...)` (٪)
-- [ ] Property test: `parse_number(format_number(x, ...)) == x`
+- [x] `to_latin_digits`, `to_arabic_digits`, `to_persian_digits`
+- [x] `parse_number(text) -> Decimal` (Arabic ٬ ٫, Latin `,` `.`, Arabic comma ،, sign, ambiguity errors)
+- [x] `format_number(...)` with digit set, grouping, decimal mark, places
+- [x] `format_percent(...)` (٪)
+- [x] Property test: `parse_number(format_number(x, ...)) == x`
 - Note: `format_money` lands in Phase 5 inside `words/money.py`, once `Currency` exists (`digits` never imports `words`)
 
 ## Phase 2 — normalize + sort
