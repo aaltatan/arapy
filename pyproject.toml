@@ -1,0 +1,52 @@
+[project]
+name = "arapy"
+version = "0.0.1"
+description = "Strongly typed Arabic text, number and date tools: tafqeet, digits, normalization, sorting, ordinals, dates and shaping."
+readme = "README.md"
+authors = [
+    { name = "aaltatan", email = "a.altatan@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+keywords = ["arabic", "tafqeet", "hijri", "numbers", "normalization"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Natural Language :: Arabic",
+    "Typing :: Typed",
+]
+
+[project.optional-dependencies]
+hijri = ["hijridate"]
+shape = ["arabic-reshaper", "python-bidi"]
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest",
+    "hypothesis",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.8,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "RUF"]
+# Arabic text everywhere: confusable-character checks are noise here.
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+files = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers", "--import-mode=importlib"]
