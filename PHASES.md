@@ -36,11 +36,11 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 3 — words: integer engine
 
-- [ ] `grammar.py`: integers 0 … 10^15 − 1 → words, masculine/feminine, `Case`, `hundreds` spelling
-- [ ] Teens, tens, compounds (أحد عشر / إحدى عشرة، اثنا عشر / اثنتا عشرة), hundreds (مئة، مئتان، ثلاثمئة), thousands/millions/billions/trillions with dual and plural (ألفان، آلاف، ملايين)
-- [ ] Golden table `tests/words/golden_integers.py` (maintainer reviews it before the phase closes)
-- [ ] `Tafqeet` config object (hundreds, case, prefix, suffix) and the `to_words` shortcut, without units yet
-- [ ] Negatives («سالب …»)
+- [x] `grammar.py`: integers 0 … 10^15 − 1 → words, masculine/feminine, `Case`, `hundreds` spelling
+- [x] Teens, tens, compounds (أحد عشر / إحدى عشرة، اثنا عشر / اثنتا عشرة), hundreds (مئة، مئتان، ثلاثمئة), thousands/millions/billions/trillions with dual and plural (ألفان، آلاف، ملايين)
+- [x] Golden table `tests/words/golden_integers.py` (maintainer reviews it before the phase closes) — reviewed and approved
+- [x] `Tafqeet` config object (hundreds, case, prefix, suffix) and the `to_words` shortcut, without units yet
+- [x] Negatives («سالب …»)
 
 ## Phase 4 — words: nouns, currencies, fractions
 
@@ -107,7 +107,7 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 1. **101 / 102 with a unit:** «مئة ليرة وليرة» / «مئة وليرتان» vs «مئة وواحدة ليرة» / «مئة واثنتان ليرة»?
 2. **Dual thousands before a noun:** «ألفا ليرة» (construct) vs «ألفان من الليرات» vs «ألفان ليرة»?
 3. **Plain 1 and 2 with a unit:** always «ليرة سورية واحدة» or just «ليرة سورية»?
-4. **Tanween in output:** «قرشًا» / «دولارًا» always written, or only when `case` ≠ nominative?
+4. ~~**Tanween in output:** «قرشًا» / «دولارًا» always written, or only when `case` ≠ nominative?~~ **Decided:** always written (ًا).
 5. ~~**ة → ه folding** in the `SEARCH` preset only, or also in `NAMES`?~~ **Decided:** both presets.
 6. **Repo layout for arapy-cli:** same repo as a uv workspace, or a separate repo? (arapy itself stays a single package.)
 
@@ -117,3 +117,14 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 - ؤ → و and ئ → ي folding is in `SEARCH` only (the rule is still available to add to any normalizer).
 - Compound names are split with a space: عبدالله → عبد الله, ابوبكر → ابو بكر.
 - Sorting: ة sorts as ت; alef forms as ا; ؤ as و; ئ and ى as ي.
+
+## Decisions (Phase 3)
+
+- Tanween is always written on the تمييز after 11–99: «أحد عشر ألفًا»، «خمسة وعشرون مليونًا».
+- A scale group ending in 1 or 2 after a hundred repeats the scale word: 101,000 → «مئة ألف وألف», 102,000 → «مئة ألف وألفان».
+- 10^9 is مليار (plural مليارات); 10^12 is تريليون (plural تريليونات).
+- 800 is ثمانمئة; feminine 8 is always ثماني (ثماني عشرة، ثماني وعشرون).
+- Hundreds in construct before a scale word drop the ن: 200,000 → «مئتا ألف» (oblique «مئتي ألف»).
+- Scale words are masculine, so their counts use masculine agreement («ثلاثة آلاف»); only the last group (below 1000) follows the requested gender.
+- `case` changes only the dual and sound-plural endings (اثنان/اثنين، اثنا/اثني، عشرون/عشرين، مئتان/مئتين، ألفان/ألفين). The تمييز after a number does not change.
+- A bare number (no unit) is masculine.
