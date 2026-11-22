@@ -23,7 +23,6 @@ def format_money(
     """
     if isinstance(value, str):
         number = parse_number(value, decimal="." if currency.ratio == 1000 else None)
-
     else:
         number = Decimal(value)
 
