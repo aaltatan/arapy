@@ -60,10 +60,10 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 6 — ordinals
 
-- [ ] `ordinal(n, gender, definite=True, case=...)`: الأول/الأولى … الحادي عشر/الحادية عشرة … العشرون … المئة
-- [ ] Indefinite forms (أول، ثانٍ، ثالث)
-- [ ] `ordinal_adverb(n)` (أولًا، ثانيًا…)
-- [ ] Golden tables
+- [x] `ordinal(n, gender, definite=True, case=...)`: الأول/الأولى … الحادي عشر/الحادية عشرة … العشرون … المئة
+- [x] Indefinite forms (أول، ثانٍ، ثالث)
+- [x] `ordinal_adverb(n)` (أولًا، ثانيًا…)
+- [x] Golden tables (`tests/golden_ordinals.py`) — reviewed and approved
 
 ## Phase 7 — dates: ArDate
 
@@ -146,3 +146,11 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 - `Tafqeet.parse(text, unit=None)` takes the counted unit as an optional argument, so it can read unit and subunit words and use the currency's `ratio`. It strips only the `Tafqeet`'s own prefix and suffix.
 - `Currency` gains `symbol: str = ""`. The built-ins use Arabic abbreviations (ل.س، ر.س، د.ك، …) and $ € £ for USD, EUR and GBP. Custom currencies with no symbol show their code.
 - `format_money` defaults to Arabic digits with ٬ and ٫. With no `places`, whole amounts show no decimals and other amounts are padded to the subunit places (2, or 3 for 1000-ratio currencies).
+
+## Decisions (Phase 6)
+
+- `ordinal` and `ordinal_adverb` cover 1–100; anything else raises `OutOfRangeError`.
+- 21st, 31st, …: «الحادي والعشرون» / «الحادية والعشرون»; 11th: «الحادي عشر» / «الحادية عشرة».
+- Definite ordinals change only in the tens (العشرون / العشرين).
+- Indefinite ordinals change with case: «ثانٍ»، «ثالث» (nominative/genitive) and «ثانيًا»، «ثالثًا» (accusative); «أول» and «أولى» never take tanween; feminine accusative takes tanween on ة («ثالثةً»). Indefinite 21–99: «حادٍ وعشرون», accusative «حاديًا وعشرين». Compounds 11–19 never change.
+- `ordinal_adverb`: أولًا … عاشرًا, then «حادي عشر»، «ثاني عشر»، «عشرون»، «حادي وعشرون» with no tanween.
