@@ -4,6 +4,7 @@ from importlib.metadata import version
 
 from arapy.errors import (
     ArapyError,
+    FormatError,
     InvalidNumberError,
     MissingExtraError,
     OutOfRangeError,
@@ -14,6 +15,7 @@ __version__ = version("arapy")
 
 __all__ = [
     "ArapyError",
+    "FormatError",
     "InvalidNumberError",
     "MissingExtraError",
     "OutOfRangeError",

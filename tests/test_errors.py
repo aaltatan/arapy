@@ -2,6 +2,7 @@ import pytest
 
 from arapy import (
     ArapyError,
+    FormatError,
     InvalidNumberError,
     MissingExtraError,
     OutOfRangeError,
@@ -12,6 +13,7 @@ from arapy import (
 @pytest.mark.parametrize(
     ("error", "builtin"),
     [
+        (FormatError, ValueError),
         (InvalidNumberError, ValueError),
         (OutOfRangeError, ValueError),
         (ParseError, ValueError),

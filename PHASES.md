@@ -67,12 +67,13 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 
 ## Phase 7 — dates: ArDate
 
-- [ ] `months.py`: `MonthNames` styles LEVANT, EGYPTIAN, MAGHREB, LEVANT_WITH_EGYPTIAN; weekday names; Hijri month names
-- [ ] `formatting.py`: shared formatter and strict parser (strftime directives + `%O` ordinal day, any digit set)
-- [ ] `ArDate`: type-preserving `__add__`/`__radd__`/`__sub__`/`replace`/classmethods; `.format()`, `strptime()`, `weekday_name`, `month_name()`, `from_date()`
-- [ ] Ordinal dates: «الخامس من كانون الثاني ٢٠٢٦»
-- [ ] Property test: `ArDate.strptime(d.format(f), f) == d`
-- [ ] mypy test file asserting `reveal_type(ArDate(...) + timedelta(1))` is `ArDate`
+- [x] `months.py`: `MonthNames` styles LEVANT, EGYPTIAN, MAGHREB, LEVANT_WITH_EGYPTIAN; weekday names; Hijri month names
+- [x] `formatting.py`: shared formatter and strict parser (strftime directives + `%O` ordinal day, any digit set)
+- [x] `ArDate`: type-preserving `__add__`/`__radd__`/`__sub__`/`replace`/classmethods; `.format()`, `strptime()`, `weekday_name`, `month_name()`, `from_date()`
+- [x] Ordinal dates: «الخامس من كانون الثاني ٢٠٢٦»
+- [x] Property test: `ArDate.strptime(d.format(f), f) == d`
+- [x] mypy test file asserting `reveal_type(ArDate(...) + timedelta(1))` is `ArDate`
+- [x] Golden tables (`tests/dates/golden_dates.py`) — reviewed and approved
 
 ## Phase 8 — dates: ArDateTime, HijriDate, humanize
 
@@ -154,3 +155,16 @@ Each phase is sized for one Claude Code session. A phase is done when its checkl
 - Definite ordinals change only in the tens (العشرون / العشرين).
 - Indefinite ordinals change with case: «ثانٍ»، «ثالث» (nominative/genitive) and «ثانيًا»، «ثالثًا» (accusative); «أول» and «أولى» never take tanween; feminine accusative takes tanween on ة («ثالثةً»). Indefinite 21–99: «حادٍ وعشرون», accusative «حاديًا وعشرين». Compounds 11–19 never change.
 - `ordinal_adverb`: أولًا … عاشرًا, then «حادي عشر»، «ثاني عشر»، «عشرون»، «حادي وعشرون» with no tanween.
+
+## Decisions (Phase 7)
+
+- EGYPTIAN months: يناير فبراير مارس أبريل مايو يونيو يوليو أغسطس سبتمبر أكتوبر نوفمبر ديسمبر.
+- MAGHREB months follow Algeria/Tunisia: جانفي فيفري مارس أفريل ماي جوان جويلية أوت سبتمبر أكتوبر نوفمبر ديسمبر.
+- LEVANT_WITH_EGYPTIAN is «كانون الثاني (يناير)».
+- Hijri months 4 and 6 are ربيع الآخر and جمادى الآخرة; Phase 8 parsing will also accept الثاني/الثانية.
+- Weekdays: الاثنين (hamzat wasl) … الأحد.
+- %a and %b give the full names, like %A and %B: Arabic has no standard abbreviations.
+- %O is the masculine definite ordinal (اليوم الخامس): «الأول»، «الحادي عشر»، «الحادي والثلاثون». An ordinal date is the format «%O من %B %Y».
+- Supported directives: %a %A %b %B %d %m %y %Y %j %O %%; any other raises `FormatError` (new error class). %y uses the `time.strptime` pivot (69–99 → 19xx).
+- `strptime` is strict: no whitespace trimming, exact month names (no hamza or tashkeel folding), a weekday or day of year that disagrees with the date raises `ParseError`; missing fields default to 1900-01-01 as in `datetime.strptime`.
+- Arithmetic, `replace` and the classmethods are not overridden: the standard library already returns the subclass. Only `__sub__` is overloaded, so `ArDate - date` type-checks as `timedelta`.

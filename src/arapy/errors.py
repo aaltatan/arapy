@@ -17,6 +17,10 @@ class ParseError(ArapyError, ValueError):
     """Text does not match the expected format."""
 
 
+class FormatError(ArapyError, ValueError):
+    """A format string uses a directive that is not supported."""
+
+
 class MissingExtraError(ArapyError, ImportError):
     """An optional extra is needed but not installed."""
 
