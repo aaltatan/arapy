@@ -6,16 +6,28 @@ readme = "README.md"
 authors = [
     { name = "aaltatan", email = "a.altatan@gmail.com" }
 ]
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = []
 keywords = ["arabic", "tafqeet", "hijri", "numbers", "normalization"]
 classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Topic :: Text Processing :: Linguistic",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Natural Language :: Arabic",
     "Typing :: Typed",
 ]
+
+[project.urls]
+Homepage = "https://github.com/aaltatan/arapy"
+Repository = "https://github.com/aaltatan/arapy"
+Issues = "https://github.com/aaltatan/arapy/issues"
+Changelog = "https://github.com/aaltatan/arapy/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 hijri = ["hijridate"]
