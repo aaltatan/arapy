@@ -1,3 +1,0 @@
-# Errors
-
-::: arapy.errors

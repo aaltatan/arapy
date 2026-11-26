@@ -3,30 +3,90 @@ site_description: Strongly typed Arabic text, number and date tools for Python.
 site_url: https://aaltatan.github.io/arapy/
 repo_url: https://github.com/aaltatan/arapy
 repo_name: aaltatan/arapy
+edit_uri: edit/main/docs/
+copyright: MIT
 
 theme:
   name: material
-  features:
-    - content.code.copy
-    - navigation.sections
+  icon:
+    logo: material/abjad-arabic
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: teal
+      accent: amber
       toggle:
         icon: material/brightness-7
-        name: Dark mode
+        name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: teal
+      accent: amber
       toggle:
         icon: material/brightness-4
-        name: Light mode
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.action.edit
+    - toc.follow
+
+nav:
+  - Home: index.md
+  - Installation: install.md
+  - User guide:
+      - guide/index.md
+      - Amounts in words (تفقيط): guide/words.md
+      - Digits and numbers: guide/digits.md
+      - Normalization: guide/normalize.md
+      - Sorting: guide/sort.md
+      - Ordinals: guide/ordinals.md
+      - Dates: guide/dates.md
+      - Relative times and durations: guide/humanize.md
+      - Shaping for images and PDFs: guide/shape.md
+  - Recipes: recipes.md
+  - Reference:
+      - reference/index.md
+      - Words (تفقيط): reference/words.md
+      - Digits: reference/digits.md
+      - Normalize: reference/normalize.md
+      - Sort: reference/sort.md
+      - Ordinals: reference/ordinals.md
+      - Dates: reference/dates.md
+      - Shape: reference/shape.md
+      - Date formats: reference/date-formats.md
+      - Exceptions: reference/exceptions.md
+  - Changelog: changelog.md
 
 markdown_extensions:
   - admonition
-  - pymdownx.highlight
-  - pymdownx.superfences
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
   - pymdownx.snippets:
       check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
 
 plugins:
   - search
@@ -42,15 +102,9 @@ plugins:
             show_signature_annotations: true
             filters: ["!^_"]
 
-nav:
-  - Home: index.md
-  - API reference:
-      - Words (تفقيط): api/words.md
-      - Digits: api/digits.md
-      - Normalize: api/normalize.md
-      - Sort: api/sort.md
-      - Ordinals: api/ordinals.md
-      - Dates: api/dates.md
-      - Shape: api/shape.md
-      - Errors: api/errors.md
-  - Changelog: changelog.md
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/aaltatan/arapy
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/arapy/

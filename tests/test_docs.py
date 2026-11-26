@@ -1,4 +1,4 @@
-"""Run the examples in README.md and in the docstrings, so the docs cannot drift from the code.
+"""Run the examples in README.md, docs/ and the docstrings, so the docs cannot drift from the code.
 
 Examples are ```python blocks, run in order in one namespace per file or module. Every
 `print(...)  # expected` call must print exactly `expected`; a comment ending in `…` only
@@ -96,6 +96,22 @@ def test_readme_examples() -> None:
     pytest.importorskip("bidi")
 
     assert _run((_ROOT / "README.md").read_text(encoding="utf-8"), "README.md") > 0
+
+
+_PAGES = sorted(
+    path
+    for path in (_ROOT / "docs").rglob("*.md")
+    if _BLOCK.search(path.read_text(encoding="utf-8"))
+)
+
+
+@pytest.mark.parametrize("path", _PAGES, ids=lambda path: path.relative_to(_ROOT).as_posix())
+def test_docs_page_examples(path: Path) -> None:
+    pytest.importorskip("hijridate")
+
+    pytest.importorskip("bidi")
+
+    _run(path.read_text(encoding="utf-8"), path.relative_to(_ROOT).as_posix())
 
 
 @pytest.mark.parametrize("name", _MODULES)
